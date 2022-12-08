@@ -6,8 +6,7 @@ const Solitaire = function(container) {
 	const display = new Display(container.clientWidth, container.clientHeight);
 	container.append(display.canvas);
 
-	display.draw('hello world', 1, 1);
-
+	display.menu.draw();
 
 	this.resize = function(width, height) {
 		display.resize(width, height);
