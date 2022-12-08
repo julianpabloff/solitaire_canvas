@@ -32,13 +32,13 @@ const Display = function(width, height) {
 	this.centerString = (string, width = columns) => { return Math.floor(width / 2 - string.length / 2); }
 
 	this.themes = new Themes();
-	let color = this.themes.getColor('tab');
-	this.setColor = attribute => color = this.themes.getColor(attribute);
+	this.color = this.themes.getColor('tab');
+	this.setColor = attribute => this.color = this.themes.getColor(attribute);
 
 	this.clear = () => context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 	this.applyBackground = function() {
 		this.setColor('tab');
-		context.fillStyle = color.bg;
+		context.fillStyle = this.color.bg;
 		context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 	}
 
@@ -49,19 +49,19 @@ const Display = function(width, height) {
 			const char = string[i];
 			
 			if (char == '█') {
-				context.fillStyle = color.fg;
+				context.fillStyle = this.color.fg;
 				context.fillRect(x, y, charWidth, charHeight);
 			} else if (char == '▄') {
-				context.fillStyle = color.fg;
+				context.fillStyle = this.color.fg;
 				context.fillRect(x, y + charHeight / 2, charWidth, charHeight / 2);
 			} else if (char == '▀') {
-				context.fillStyle = color.fg;
+				context.fillStyle = this.color.fg;
 				context.fillRect(x, y, charWidth, charHeight / 2);
 			} else {
-				context.fillStyle = color.bg;
+				context.fillStyle = this.color.bg;
 				context.fillRect(x, y, charWidth, charHeight);
 
-				context.fillStyle = color.fg;
+				context.fillStyle = this.color.fg;
 				context.fillText(char, x, y + charAscent);
 			}
 		}
@@ -72,7 +72,7 @@ const Display = function(width, height) {
 		const y = gridY * charHeight;
 		const w = gridWidth * charWidth;
 		const h = gridHeight * charHeight;
-		context.fillStyle = color.bg;
+		context.fillStyle = this.color.bg;
 		context.fillRect(x, y, w, h);
 	}
 
@@ -89,4 +89,5 @@ const Display = function(width, height) {
 
 	this.menu = new MenuDisplay(this);
 	this.settings = new SettingsDisplay(this);
+	this.preview = new Preview(this);
 }

@@ -40,9 +40,10 @@ const SettingsDisplay = function(d) {
 			} else d.setColor('txt');
 			const output = items[i] + ' - ' + options[i][code[i]];
 			d.draw(output, x + 5, drawY);
-			d.setColor('txt');
-			d.drawSquare(x + 3, y + 12, 74, 19, false);
-			d.draw('press esc when done', x + 4, y + 31);
 		}
+		d.setColor('txt');
+		d.drawSquare(x + 3, y + 12, 74, 19, false);
+		d.draw('press esc when done', x + 4, y + 31);
+		d.preview.draw(x + 4, y + 13, 'game', d.themes.getTheme('normal'), code[1]);
 	}
 }

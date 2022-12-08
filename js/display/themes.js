@@ -21,6 +21,11 @@ const Themes = function() {
 		theme = themes[title];
 	}
 
+	this.getTheme = function(title) {
+		console.log(themes[title]);
+		return themes[title];
+	}
+
 	this.getColor = function(attribute) {
 		return theme[attribute];
 	}

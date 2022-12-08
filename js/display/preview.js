@@ -1,6 +1,6 @@
 'use strict';
 
-const preview = {
+const previewData = {
 	game : {
 		text : [
 			' │            │              ░░░░░░░░░░░░░░    ░░░░░░░░░░░░░░    │      ',
@@ -44,5 +44,29 @@ const preview = {
 };
 
 const Preview = function(d) {
-	draw
+	this.draw = function(x, y, scene, theme, labels = false) {
+		const preview = previewData[scene];
+		const previewRows = preview.text.length;
+		for (let i = 0; i < previewRows; i++) {
+			const textIndex = i == 5 && !labels ? 4 : i;
+			let position = 0;
+			for (const item of preview.color[i]) {
+				const changeToModeCursor = item[0] == 'tom' && theme['tom'].bg == theme['cur'].bg;
+				const color = changeToModeCursor ? theme['tab'] : theme[item[0]];
+				const count = item[1];
+				for (let j = 0; j < count; j++) {
+					let char = changeToModeCursor ? '░' : preview.text[textIndex][position];
+					if (!labels) {
+						switch (char.charCodeAt(0)) {
+							case 9824: case 9827: case 9829: case 9830:
+								char = ' ';
+						}
+					}
+					d.color = color;
+					d.draw(char, x + position, y + i);
+					position++;
+				}
+			}
+		}
+	}
 }
