@@ -24,4 +24,12 @@ const Themes = function() {
 	this.getColor = function(attribute) {
 		return theme[attribute];
 	}
+
+	this.listThemes = function(toUpper = false) {
+		const list = [];
+		for (const key of Object.keys(themes)) {
+			list.push(toUpper ? key.toUpperCase() : key);
+		}
+		return list;
+	}
 }

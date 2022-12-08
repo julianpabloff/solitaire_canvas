@@ -11,8 +11,6 @@ const Display = function(width, height) {
 		charWidth = Math.ceil(charMeasure.actualBoundingBoxRight - charMeasure.actualBoundingBoxLeft);
 		charAscent = charMeasure.actualBoundingBoxAscent;
 		charHeight = Math.ceil(charAscent + charMeasure.actualBoundingBoxDescent);
-		console.log('grid cell width: ' + charWidth + 'px');
-		console.log('grid cell height: ' + charHeight + 'px');
 	}
 	let charWidth, charHeight, charAscent;
 
@@ -33,9 +31,9 @@ const Display = function(width, height) {
 	this.centerHeight = height => { return Math.floor(rows/2 - height/2); }
 	this.centerString = (string, width = columns) => { return Math.floor(width / 2 - string.length / 2); }
 
-	const themes = new Themes();
-	let color = themes.getColor('tab');
-	this.setColor = attribute => color = themes.getColor(attribute);
+	this.themes = new Themes();
+	let color = this.themes.getColor('tab');
+	this.setColor = attribute => color = this.themes.getColor(attribute);
 
 	this.clear = () => context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 	this.applyBackground = function() {
@@ -45,7 +43,6 @@ const Display = function(width, height) {
 	}
 
 	this.draw = function(string, gridX, gridY) {
-		console.log(color);
 		for (let i = 0; i < string.length; i++) {
 			const x = (gridX + i) * charWidth;
 			const y = gridY * charHeight;
@@ -54,6 +51,12 @@ const Display = function(width, height) {
 			if (char == '█') {
 				context.fillStyle = color.fg;
 				context.fillRect(x, y, charWidth, charHeight);
+			} else if (char == '▄') {
+				context.fillStyle = color.fg;
+				context.fillRect(x, y + charHeight / 2, charWidth, charHeight / 2);
+			} else if (char == '▀') {
+				context.fillStyle = color.fg;
+				context.fillRect(x, y, charWidth, charHeight / 2);
 			} else {
 				context.fillStyle = color.bg;
 				context.fillRect(x, y, charWidth, charHeight);
@@ -85,4 +88,5 @@ const Display = function(width, height) {
 	}
 
 	this.menu = new MenuDisplay(this);
+	this.settings = new SettingsDisplay(this);
 }
