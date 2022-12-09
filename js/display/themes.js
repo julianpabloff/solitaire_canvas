@@ -18,12 +18,36 @@ const themes = {
 		c: {fg: 'white', bg: 'black'},
 		d: {fg: '#a51d20', bg: 'black'},
 		s: {fg: 'white', bg: 'black'},
-		bac: {fg: 'white', bg: 'transparent'},
+		bac: {fg: 'white', bg: 'black'},
 		tab : {fg: 'white', bg: 'black'},
 		cur : {fg: 'black', bg: 'white'},
 		tom : {fg: 'black', bg: '#a51d20'},
 		txt : {fg: '#a51d20', bg: 'black'},
 		txtcur : {fg: 'black', bg: '#a51d20'}
+	},
+	ice: {
+		h: {fg: 'black', bg: '#2abdea'},
+		c: {fg: 'white', bg: '#384493'},
+		d: {fg: 'black', bg: '#2abdea'},
+		s: {fg: 'white', bg: '#384493'},
+		bac: {fg: 'black', bg: 'white'},
+		tab : {fg: 'white', bg: 'black'},
+		cur : {fg: 'black', bg: 'white'},
+		tom : {fg: 'white', bg: '#384493'},
+		txt : {fg: 'black', bg: '#2abdea'},
+		txtcur : {fg: 'black', bg: 'white'}
+	},
+	pipboy : {
+		h: {fg: 'black', bg: '#2dfc2d'},
+		c: {fg: '#2dfc2d', bg: 'black'},
+		d: {fg: 'black', bg: '#2dfc2d'},
+		s: {fg: '#2dfc2d', bg: 'black'},
+		bac: {fg: '#2dfc2d', bg: 'black'},
+		tab : {fg: '#2dfc2d', bg: 'black'},
+		cur : {fg: 'black', bg: '#2dfc2d'},
+		tom : {fg: 'black', bg: '#2dfc2d'},
+		txt : {fg: '#2dfc2d', bg: 'black'},
+		txtcur : {fg: 'black', bg: '#2dfc2d'}
 	}
 };
 

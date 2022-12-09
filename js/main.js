@@ -3,10 +3,11 @@
 const Solitaire = function(container) {
 	const controller = new Controller();
 	const display = new Display(container.clientWidth, container.clientHeight);
+	const game = new Game();
 
 	// Settings
 	let jsonSettings = {
-		theme: 'dark',
+		theme: 'normal',
 		label: false,
 		draw: 3
 	};
@@ -17,7 +18,7 @@ const Solitaire = function(container) {
 	};
 	function applySettings(settings) {
 		display.themes.setTheme(settings.theme);
-		// game.drawAmount = settings.draw;
+		game.drawAmount = settings.draw;
 	}
 	for (const k of Object.keys(allSettings))
 		controller.settings.counts.push(allSettings[k].length);
@@ -29,6 +30,11 @@ const Solitaire = function(container) {
 	const update = {};
 	update.menu = function(command) {
 		switch (command.type) {
+			case 'newGame':
+				game.shuffle().dealCards();
+				console.log(game.getData());
+				display.game.draw(game.getData());
+				break;
 			case 'move': display.menu.draw(command.data); break;
 			case 'settings': switchTo('settings', command.data); break;
 		}
@@ -43,6 +49,8 @@ const Solitaire = function(container) {
 				switchTo('menu', [controller.menu.reset()]);
 				break;
 		}
+	}
+	update.game = function(command) {
 	}
 
 	// Screen Switching
@@ -66,10 +74,15 @@ const Solitaire = function(container) {
 		}
 	});
 
+	const getData = {};
+	getData.menu = () => [controller.menu.getData()];
+	getData.settings = () => controller.settings.getData();
+	// getData.game = () => [game.getData(), controller.game.getData()];
 	this.resize = function(width, height) {
 		display.resize(width, height);
 		display.menu.resize();
 		display.settings.resize();
-		display[screen].draw();
+		display.game.resize();
+		display[screen].draw(...getData[screen]());
 	}
 }
