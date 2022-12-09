@@ -3,26 +3,28 @@
 const Display = function(width, height) {
 	this.canvas = document.createElement('canvas');
 	this.canvas.oncontextmenu = () => false;
-	const context = this.canvas.getContext('2d');
+	const ctx = this.canvas.getContext('2d');
 
 	const setFontSize = function(pixels) {
-		context.font = pixels + 'px monospace';
-		const charMeasure = context.measureText('█');
+		ctx.font = pixels + 'px monospace';
+		const charMeasure = ctx.measureText('█');
 		charWidth = Math.ceil(charMeasure.actualBoundingBoxRight - charMeasure.actualBoundingBoxLeft);
 		charAscent = charMeasure.actualBoundingBoxAscent;
-		charHeight = Math.ceil(charAscent + charMeasure.actualBoundingBoxDescent);
+		charDescent = charMeasure.actualBoundingBoxDescent;
+		// charAscent = Math.floor(charMeasure.actualBoundingBoxAscent);
+		charHeight = Math.ceil(charAscent + charDescent);
 	}
-	let charWidth, charHeight, charAscent;
+	let charWidth, charHeight, charAscent, charDescent;
 
 	this.resize = function(width, height) {
-		const fontSize = 14 + 4 * (width > 1000);
+		const fontSize = 14 + 4 * (width > 1400);
 		setFontSize(fontSize);
 
 		columns = Math.floor(width / charWidth);
 		rows = Math.floor(height / charHeight);
 		this.canvas.width = width - (width % charWidth);
 		this.canvas.height = height - (height % charHeight);
-		context.font = fontSize + 'px monospace';
+		ctx.font = fontSize + 'px monospace';
 	}
 	let columns, rows;
 	this.resize(width, height);
@@ -32,14 +34,14 @@ const Display = function(width, height) {
 	this.centerString = (string, width = columns) => { return Math.floor(width / 2 - string.length / 2); }
 
 	this.themes = new Themes();
-	this.color = this.themes.getColor('tab');
+	this.color = 'black';
 	this.setColor = attribute => this.color = this.themes.getColor(attribute);
 
-	this.clear = () => context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+	this.clear = () => ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	this.applyBackground = function() {
 		this.setColor('tab');
-		context.fillStyle = this.color.bg;
-		context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+		ctx.fillStyle = this.color.bg;
+		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	}
 
 	this.draw = function(string, gridX, gridY) {
@@ -47,22 +49,28 @@ const Display = function(width, height) {
 			const x = (gridX + i) * charWidth;
 			const y = gridY * charHeight;
 			const char = string[i];
+			const code = char.charCodeAt(0);
+			const fill = ctx.fillStyle;
+			let descentDelta = 0;
 			
-			if (char == '█') {
-				context.fillStyle = this.color.fg;
-				context.fillRect(x, y, charWidth, charHeight);
-			} else if (char == '▄') {
-				context.fillStyle = this.color.fg;
-				context.fillRect(x, y + charHeight / 2, charWidth, charHeight / 2);
-			} else if (char == '▀') {
-				context.fillStyle = this.color.fg;
-				context.fillRect(x, y, charWidth, charHeight / 2);
-			} else {
-				context.fillStyle = this.color.bg;
-				context.fillRect(x, y, charWidth, charHeight);
+			let drawChar = false;
+			switch (code) {
+				case 9608: ctx.fillStyle = this.color.fg; ctx.fillRect(x, y, charWidth, charHeight); break;
+				case 9604: ctx.fillStyle = this.color.fg; ctx.fillRect(x, y + charHeight / 2, charWidth, charHeight / 2); break;
+				case 9600: ctx.fillStyle = this.color.fg; ctx.fillRect(x, y, charWidth, charHeight / 2); break;
+				case 9617:
+					const descent = ctx.measureText(String.fromCharCode(code)).actualBoundingBoxDescent;
+					// descentDelta = charDescent - descent;
+					descentDelta = 5; // hard coding to draw this character lower, may be device-specific
+					drawChar = true; break;
+				default: drawChar = true; break;
+			}
+			if (drawChar) {
+				ctx.fillStyle = this.color.bg;
+				ctx.fillRect(x, y, charWidth, charHeight);
 
-				context.fillStyle = this.color.fg;
-				context.fillText(char, x, y + charAscent);
+				ctx.fillStyle = this.color.fg;
+				ctx.fillText(char, x, y + charAscent + descentDelta);
 			}
 		}
 	}
@@ -72,8 +80,8 @@ const Display = function(width, height) {
 		const y = gridY * charHeight;
 		const w = gridWidth * charWidth;
 		const h = gridHeight * charHeight;
-		context.fillStyle = this.color.bg;
-		context.fillRect(x, y, w, h);
+		ctx.fillStyle = this.color.bg;
+		ctx.fillRect(x, y, w, h);
 	}
 
 	const square = {tl: '┌', tr: '┐', bl: '└', br: '┘', h: '─', v: '│'};

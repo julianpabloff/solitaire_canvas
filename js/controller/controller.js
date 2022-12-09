@@ -1,5 +1,6 @@
 const Controller = function() {
 	this.menu = new MenuController(this);
+	this.settings = new SettingsController(this);
 
 	this.cycle = function(number, count, up = true) {
 		const max = count - 1;
